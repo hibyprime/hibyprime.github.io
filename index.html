@@ -1,0 +1,187 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <title>New tab page</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: #444;
+            color: #DDD;
+            font-family: sans-serif;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            width: 100%;
+        }
+        .background::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: RGBA(0, 0, 0, 0.7);
+        }
+        .background img {
+            display: block;
+            width: 100%;
+        }
+        .wrap {
+            position: relative;
+            z-index: 2;
+        }
+        .container {
+            width: 100%;
+            max-width: 60vw;
+            margin: 0 auto;
+            display: flex;
+        }
+        .container:first-child {
+            padding-top: 80px;
+        }
+        .item {
+            width: 20%;
+            padding: 15px;
+        }
+        .item a {
+            width: 100%;
+            height: 200px;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            background-color: RGBA(0, 0, 0, 0.5);
+        }
+        .item a img {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 300px;
+        }
+
+        .hidden {
+            display: none;
+        }
+		
+		@media (max-width: 1200px) {
+			.container {
+				max-width: 90vw;
+			}
+		}
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="wrap">
+        <div class="container">
+            <div class="item">
+                <a href="https://www.wowhead.com/"><img src="https://wow.zamimg.com/images/logos/share-icon.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.techpowerup.com/"><img src="https://tpucdn.com/apple-touch-icon-v1657269808529.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://arstechnica.com/"><img src="https://cdn.arstechnica.net/wp-content/themes/ars/assets/img/material-ars-db41652381.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.theverge.com/"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/7395359/ios-icon.0.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.tomshardware.com/"><img src="https://vanilla.futurecdn.net/tomshardware/media/img/brand_logo.svg" /></a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="item">
+                <a href="https://semiaccurate.com/"><img src="https://semiaccurate.com/wp-content/themes/semiaccurate/lib/images/sa_logo.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.roadtovr.com/"><img src="https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2015/02/road-to-vr-logo-lighter.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://linustechtips.com/forum/13-tech-news/?sortby=start_date&sortdirection=desc"><img src="https://pbs-prod.linustechtips.com/monthly_2021_11/android-chrome-512x512.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.youtube.com/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX/AAD/////u7v/6+v/0ND/aWn/mZn/zc3/9fX/h4f/5ub/+Pj/tbX/t7f/oKD/ODj/Kir/3d3/wMD/MzP/UVH/1dX/yMj/qan/lJT/TU3/gID/Fxf/PT3/eHj/Dg7/jY3/ZWX/Q0P/XV3/IiL/cXH/q6v/X1//eXnZjuaVAAAE20lEQVR4nO2d63aiQAyAOyKgXAVF0Lbrtbvv/4YLZ9didUDQQEjI9689RyffwcCQub0p7rxhB9A5YkgfMaSPGNJHDOkjhvQRQ/qIIX3EkD5iSB8xpI8Y0kcM6SOG9BFD+oghfcSQPmJIHzGkjxi+jHEhml4Tff+/6wBeMXTdWU6SrD0/DQIry3Z709yEYbh4e45F/tmNae53WWYFQep76yQpmnDd3gxdw4mi2LPm27O5OZzenzRpy/vpsDHP27nlxVHkGO18Gxo6dmx9HjfLvpzqeF9ujp9WbDtQhnZqPvur65qFmdovGjrBCtviIaug/mLWGdp77Ogbsq+7ktWG0fAvX8kqam+4xQ66JduWhk6IHXFrwop01BuuscN9inVzQw871ifxmhr62JE+jd/MMMGO8wWSJoYudpQvcd9nvTc8Ygf5EsfHhlTvMhfu7ja3hu4JO8QXOd3+Tm8NA+wIXyZ4YIgdHwD1htSzsMCrNTxghwfAoc7QwI4OBKPGcIIdHAiTGsMzdnAgnGsMP7CDA+Gj2tDBjg0Ip9LQxg4NCLvS0MIODQir0vATOzQgPisNedxobm4114Yz7MjAmFUY8ujRFBgVhjRriDrWFYYpdmBgpBWGXB4WPx8X14Y8eqUF5wrDJXZgYCwrDLHjAmSshnwehz8eiFeGlMcrbkm0hjF0M4hTOGKtIfig2iRGm37jaw3Ba6UTpTLo72yIpzWcQzdT1LwMnG7EXGtoQjfzr6qXbKC/twGm1hB84PBSt4x/QX/zQ45aQ/A3/LIy23uf/kNrCH5zv6o9Gz2XgBa9GyoV9ZqOWsMZeLb8HD9QcY/Dy79mGIZ9pqPWMAJv5s5QGb3NB4yQDPub06kznIK3ojPM07GXDvkU0VCpoIcegM4QfuCpylDNwLvAd5TDTyiGSjldp6POEL7iXWOYN9dtZa+sepeGX+Ct1BoqlXaZjl8aQ/ia/gPDTtOxrOtjGubp2NlUT53hDryVx4Z5OnY0KrvTGML/ZJoY5vnfSTqWZQx8w27ScVCGeTr+Bm9bZwjf7W9smKcj9KTIcpFQaQheamtjqJQHm45lsW0whsBpMkhDZezh2h6mYf4GB5aOQzVUygcazBmuoVIwd5zhGnK/htzzkP29lPvzsIc+Da9+6R+NIf93C3k/bM/Q3vH512n419r410v517z5j1vwH3viP37IfwyY/zg+/7kY/OfT8J8TxX9eG/+5iSOYX8p/jjD/ed785+rzX2/Bf80M/3VP/Neu8V9/yH8NKf91wCMw5L8en/+eCvz3xeC/twn//Wn4PBCr9hjiv08U/72+RrBfG5fHRfWee/z3TeS/9yWTW03N/qVMeqZ1e9Dy30eYR6+mbi9o/vt5s9iT3a815FDJuDW6+Zv/2Qj8z7cgn4kPzygZwTkzIzgriPT4RaPznij33XSzsHSGZO82jc9do1pXbHF23gjOP1T8z7BUIziHVPE/S7aA+3nA/68k6zOdy4vJ+Vzuaxifra73dYvD65Nk7flpEFhZttub5ioMw2d/1Yv8syvT3O+yzAqC1PfsJCmacNs5wRk2wrgQTa+Jvv/fdQCdG6IjhvQRQ/qIIX3EkD5iSB8xpI8Y0kcM6SOG9BFD+oghfcSQPmJIHzGkjxjSRwzpI4b0EUP6iCF9/gKCNIdvAhrz/wAAAABJRU5ErkJggg==" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.twitch.tv/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAulBMVEWRRv8AAAD///+WSP83G2FmMbT39PxKQ1Z7O9mEfJCKQ/OppLLo6Oj8/PyTk5MsLCwxMTFyN8l1cH9SUlJubm7q6O4zGVp3OdJFIXrx7vVAH3HNytKORPkcDTFNJYeAPuFrM7xlMbGoqKhKSkpDQ0NjY2MlJSW0tLR9fX0dFycAABERASABABkJAB1HIn4YDCcmHTMtJDgwKDs8HWs+N0csFU/RztYoE0ciEDx+eYfe2+MVDR4fDzcXCyrcY09wAAADC0lEQVR4nO3da1PTQBSA4WgQFEWMkGqlWFGLeEEUvCP//29ZoIUm2TSdZM+ezfF9vybd4ZmTmc5ktkuSEBERERERERERERERERERERERERERERERaZVKpo27LD0YrIk1GGvzpsB7dyS7r+2TBuoLpYHqwvSVMFBbKA9UFgYA6gpDAFWFQYCawjBARWGaFf+Sjbvr/tp6oC8sA6dCn+kLK0BrwirQmNABtCV0AU0JnUBLwvSZC2hIWAO0I6wDmhHWAq0I64FGhEuANoTLgDaE4yVAE8L0wLxw6YvD/1r4+s3OdW8flS9NZld2Jlt9Fj6+uakiPJxf2bYq3J5feYIQIUKECBEiRIgQIUKECBEiRIgQIUKECBH2W3jzVv+w18J3k93rJhXh0ezK7lGvhS1CiBAhQoQIG8vfGxfmH27XNSnMPy6sa1GYf1pc16BweFJY154wPy4s+znkj7mDCEsTDAoMIsyLwOdhf44fQDhUBQYQDr8UlnwR+kAFcWEJGHqC8sLhV90Jigu1H1Fx4fppYbmz8D5hYekRPVM5tUVSGMMERYXr3yKYoKQwjgkKCksTXNMCNghPH7raK2v2HDfFAmx12M7TMrDxE4pAH8IVgJqHe3UXNgMHij4PwhWAusezdRXGPsHOwmbgd2VgR2H8E+wo7MEEuwl7Aewi/NF448+RNi/pIlwBqI27qrWwJxNsL2wG/tKmzWop7M0E2wpXmGAswFbC3396BGwl3DhvuuNvPECZ42ZjAooI92MCSgjjAgoI9ze1TcW8Cy/imqB/YWwT9C48iQ7oWXgRH9Cv8DxCoFfhcYxAn8IoJ9h0mpkBYJKMNusb1Z3u/dLxqdi+B1fKfTDtFBjFv1HxkltoCOgWht1aKJxLaGmCTmH4jWmiVYWmHtHEITQ2warQHLAstAcsCTX2TkqXWQcWhFo772TLjE9wUai6rUmwzPYjmtwKNXfeyZbZfkSTudDuBGdC/W1NgmXGJ3gljGFbk2CZ7Ud0WhbLphixxr18CUpERERERERERERERERE0/4BIdJ2Nms3qFoAAAAASUVORK5CYII=" /></a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="item">
+                <a href="https://news.ycombinator.com/"><img src="https://news.ycombinator.com/favicon.ico" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.reddit.com/"><img src="https://www.redditstatic.com/desktop2x/img/favicon/apple-icon-57x57.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://questionablecontent.net/"><img src="https://www.questionablecontent.net/images/logo16.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://xkcd.com/"><img src="https://xkcd.com/s/0b7742.png" /></a>
+            </div>
+            <div class="item">
+                <a href="https://www.commitstrip.com/en/"><img src="https://www.commitstrip.com/wp-content/themes/krds_blog/images/logo.png" /></a>
+            </div>
+        </div>
+    </div>
+    <div class="hidden"></div>
+
+    <script>
+        (() => {
+            let getNewData = () => {
+                fetch("https://api.unsplash.com/photos/random?client_id=wt2GL13TOOMSxc3xPWeVg3x6OxMWxw1XTqv0Lg3nvbM", {
+                    method: "get"
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${ response.status }`);
+                    }
+                    return response.json();
+                }).then(data => {
+                    let img = document.createElement("img");
+                    img.src = data.urls.thumb;
+                    document.querySelector(".background").appendChild(img);
+                    let bigImg = document.createElement("img");
+                    bigImg.src = data.urls.full;
+                    document.querySelector(".hidden").appendChild(bigImg);
+                    let interval = setInterval(() => {
+                        if (bigImg.complete) {
+                            clearInterval(interval);
+                            document.querySelector(".background img").src = data.urls.full;
+                            localStorage.setItem("wallpaperObj", JSON.stringify({
+                                date: Date.now(),
+                                url: data.urls.full
+                            }));
+                        }
+                    }, 50);
+                });
+            }
+
+            let oldData = localStorage.getItem("wallpaperObj");
+            if (oldData) {
+                oldData = JSON.parse(oldData);
+                if (oldData.date + 600000 > Date.now()) {
+                    let img = document.createElement("img");
+                    img.src = oldData.url;
+                    document.querySelector(".background").appendChild(img);
+                } else {
+                    getNewData();
+                }
+            } else {
+                getNewData();
+            }
+        })();
+    </script>
+</body>
+</html>
