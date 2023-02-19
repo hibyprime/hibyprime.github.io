@@ -13,6 +13,8 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
         .background {
             position: absolute;
@@ -47,8 +49,6 @@
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-        }
-        .container:first-child {
             padding-top: 80px;
         }
         .item {
@@ -82,8 +82,13 @@
 			}
 		}
 		@media (max-width: 800px) {
+            .container {
+                padding-top: 10px;
+                max-width: calc(100vw - 15px);
+            }
             .item {
-                width: calc(33.33% - 30px);
+                width: calc(33.33% - 20px);
+                padding: 10px;
             }
 		}
     </style>
