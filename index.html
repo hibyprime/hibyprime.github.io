@@ -45,12 +45,14 @@
             max-width: 60vw;
             margin: 0 auto;
             display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
         .container:first-child {
             padding-top: 80px;
         }
         .item {
-            width: 20%;
+            width: calc(20% - 30px);
             padding: 15px;
         }
         .item a {
@@ -79,6 +81,11 @@
 				max-width: 90vw;
 			}
 		}
+		@media (max-width: 800px) {
+            .item {
+                width: calc(33.33% - 30px);
+            }
+		}
     </style>
 </head>
 <body>
@@ -100,8 +107,6 @@
             <div class="item">
                 <a target="_parent" href="https://www.tomshardware.com/"><img src="https://vanilla.futurecdn.net/tomshardware/media/img/brand_logo.svg" /></a>
             </div>
-        </div>
-        <div class="container">
             <div class="item">
                 <a target="_parent" href="https://semiaccurate.com/"><img src="https://semiaccurate.com/wp-content/themes/semiaccurate/lib/images/sa_logo.png" /></a>
             </div>
@@ -117,8 +122,6 @@
             <div class="item">
                 <a target="_parent" href="https://www.twitch.tv/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAulBMVEWRRv8AAAD///+WSP83G2FmMbT39PxKQ1Z7O9mEfJCKQ/OppLLo6Oj8/PyTk5MsLCwxMTFyN8l1cH9SUlJubm7q6O4zGVp3OdJFIXrx7vVAH3HNytKORPkcDTFNJYeAPuFrM7xlMbGoqKhKSkpDQ0NjY2MlJSW0tLR9fX0dFycAABERASABABkJAB1HIn4YDCcmHTMtJDgwKDs8HWs+N0csFU/RztYoE0ciEDx+eYfe2+MVDR4fDzcXCyrcY09wAAADC0lEQVR4nO3da1PTQBSA4WgQFEWMkGqlWFGLeEEUvCP//29ZoIUm2TSdZM+ezfF9vybd4ZmTmc5ktkuSEBERERERERERERERERERERERERERERERaZVKpo27LD0YrIk1GGvzpsB7dyS7r+2TBuoLpYHqwvSVMFBbKA9UFgYA6gpDAFWFQYCawjBARWGaFf+Sjbvr/tp6oC8sA6dCn+kLK0BrwirQmNABtCV0AU0JnUBLwvSZC2hIWAO0I6wDmhHWAq0I64FGhEuANoTLgDaE4yVAE8L0wLxw6YvD/1r4+s3OdW8flS9NZld2Jlt9Fj6+uakiPJxf2bYq3J5feYIQIUKECBEiRIgQIUKECBEiRIgQIUKECBH2W3jzVv+w18J3k93rJhXh0ezK7lGvhS1CiBAhQoQIG8vfGxfmH27XNSnMPy6sa1GYf1pc16BweFJY154wPy4s+znkj7mDCEsTDAoMIsyLwOdhf44fQDhUBQYQDr8UlnwR+kAFcWEJGHqC8sLhV90Jigu1H1Fx4fppYbmz8D5hYekRPVM5tUVSGMMERYXr3yKYoKQwjgkKCksTXNMCNghPH7raK2v2HDfFAmx12M7TMrDxE4pAH8IVgJqHe3UXNgMHij4PwhWAusezdRXGPsHOwmbgd2VgR2H8E+wo7MEEuwl7Aewi/NF448+RNi/pIlwBqI27qrWwJxNsL2wG/tKmzWop7M0E2wpXmGAswFbC3396BGwl3DhvuuNvPECZ42ZjAooI92MCSgjjAgoI9ze1TcW8Cy/imqB/YWwT9C48iQ7oWXgRH9Cv8DxCoFfhcYxAn8IoJ9h0mpkBYJKMNusb1Z3u/dLxqdi+B1fKfTDtFBjFv1HxkltoCOgWht1aKJxLaGmCTmH4jWmiVYWmHtHEITQ2warQHLAstAcsCTX2TkqXWQcWhFo772TLjE9wUai6rUmwzPYjmtwKNXfeyZbZfkSTudDuBGdC/W1NgmXGJ3gljGFbk2CZ7Ud0WhbLphixxr18CUpERERERERERERERERE0/4BIdJ2Nms3qFoAAAAASUVORK5CYII=" /></a>
             </div>
-        </div>
-        <div class="container">
             <div class="item">
                 <a target="_parent" href="https://news.ycombinator.com/"><img src="https://news.ycombinator.com/favicon.ico" /></a>
             </div>
