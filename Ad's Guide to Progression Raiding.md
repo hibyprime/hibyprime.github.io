@@ -1,5 +1,5 @@
 # Ad's Guide to Progression Raiding
-This guide is intended for mid-to-late CE progression raiding. Early CE/HoF has different requirements.
+This guide is intended for mid-to-late CE progression raiding. Early CE/HoF and groups not pushing for CE at all have different requirements.
 
 ### Main goals
 
@@ -61,12 +61,19 @@ One thing you won't see here that you might expect is positioning in the boss ar
 > Early in progression and after each movement during the fight, think about where you are and if it's the most optimal, feel free to stop DPS/healing to do this for a few seconds if you need to. It's important that once you're dozens of pulls into a boss, you're consistently reacting the same way to whatever the boss is doing. Mistakes here are one of the reasons early phases even after a hundred pulls are still inconsistent.
 
 ### Movement
+> At all times, put some of your focus into knowing where you need to go next. If mechanic XYZ happens, where will you go? This is a place where it is okay for your performance to suffer for a few seconds while you think about it. In the long run, you'll likely perform better by having everything pre-planned.
+>
+> Later in progression, you should have the earlier parts of the fight down to a point where you don't need to think much about it anymore. This is a normal part of progression and once you get there it's very easy to tunnel vision. Before each pull, make a mental note of at which point in the fight you aren't completely comfortable with yet, and make sure you bring back your full focus when the raid gets to that point.
 
-### Healer optimization
+### Optimization
+The following sections are a guideline for how you should think about improving deep into progression. This is for when you're dozens or even hundreds of pulls deep
 
-### Tank optimization
+#### Healer optimization
 
-### Ranged DPS optimization
+#### Tank optimization
 
-### Melee DPS optimization
+#### Ranged DPS optimization
+> By this point, you should have your cooldowns and defensives planned out for almost any eventuality.
+
+#### Melee DPS optimization
 
