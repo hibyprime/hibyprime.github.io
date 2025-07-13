@@ -1,5 +1,5 @@
 # Ad's Guide to Progression Raiding
-This guide is intended for mid-to-late CE progression raiding. Early CE/HoF and groups not pushing for CE at all have different requirements.
+This guide is intended for mid-to-late CE progression raiding. Early CE/HoF and groups not pushing for CE at all have slightly different requirements.
 
 ### Main goals
 
@@ -7,7 +7,7 @@ These are the order in which you should prioritize your progression.
 #### Tanks
 1. Do not die
 	> Early in progression, overusing your defensives is encouraged. Ask for externals before you're even certain you need it. More important than an any other goal, you must not die until the raid is wiping. Once you're comfortable with a phase, start thinking about optimizing your CDs and externals.
-2. Make sure the boss/adds are where they needs to be
+2. Make sure the boss/adds are where they need to be
 	> As a tank, you are expected to be the leader of the melee DPS. It is up to you to make sure that they are able to be in the position they need to be in.
 3. Save your fellow tank
 	> Only after #1 and #2 are done, you should start thinking about what you can do to help out the other tank.
@@ -66,14 +66,72 @@ One thing you won't see here that you might expect is positioning in the boss ar
 > Later in progression, you should have the earlier parts of the fight down to a point where you don't need to think much about it anymore. This is a normal part of progression and once you get there it's very easy to tunnel vision. Before each pull, make a mental note of at which point in the fight you aren't completely comfortable with yet, and make sure you bring back your full focus when the raid gets to that point.
 
 ### Optimization
-The following sections are a guideline for how you should think about improving deep into progression. This is for when you're dozens or even hundreds of pulls deep
+> The following sections are a guideline for how you should think about improving deep into progression. This is for when you're dozens or even hundreds of pulls deep.
+> 
+> By this point, you should have your cooldowns and defensives planned out for nearly every mechanical variation that has occured. Some bosses are hard no matter how much practice you get, but you shouldn't be *surprised* by what's happening. You should have a plan in place for every mechanic variation, even if you fail to execute that plan sometimes.
+>
+> You should at this point be predictable to your fellow raiders. If they're standing beside you, they should know what you're going to do when a given mechanic happens, because they've seen you do it before. In addition to you not being surprised, you should not be surprising other people. Again this is not to say you won't make mistakes and surprise them with that. It's about knowing what you're going to do, not necessarily being perfect at execution.
 
-#### Healer optimization
+#### Optimization applicable to all roles
+> If people are regularly dying at a certain point in the fight, but you're never scared, can you help them out by moving around your personals to make sure you don't eat any smart heals? If you're the one who is regularly scared at a certain point, ask if there's an available external that you can get at that point.
+> 
+> If there is a portion of the fight with a high mental load that you are consistently struggling with, think about changes that could be made to make it easier for you. Can someone else do it? Can you do it in a different way that's easier? Does moving the boss make it easier?
+>
+> This tip isn't as applicable to healers, but I highly recommend spending as much time as you need to in front of a target dummy so that your rotation is something that requires almost no mental load. For some people this might just be a few minutes of pressing their buttons, but for most of us, we could be spending ***hours*** on a target dummy before hitting any sort of diminishing returns. 
 
 #### Tank optimization
+> At this point, you should be bored. You should be so used to doing the exact same thing every pull and watching the raid die around you that you want to scream. There's the rare boss where you actually get to do something, but for the most part, welcome to hell tank friends. Slam out as much DPS as you can in this stage of progression.
+> 
+> When a new section of the fight is reached, you need to immediately snap back into the unkillable wall mind-set. Use everything. Your only job is once again Do Not Die and make sure the boss is where it needs to be. Running out of defensives because you used way too many in a new section of the fight is okay, honestly it's encouraged. That means you were doing your job.
 
 #### Ranged DPS optimization
-> By this point, you should have your cooldowns and defensives planned out for almost any eventuality.
+> Strategy changes can often happen late into progression, when they do, you should think about how that affects what you've been doing. If lust got moved, does that change how you want to use your CDs? If you've been consistently making a damage check, should you consider moving your CDs around?
+>
+> Think about your personals. Could they be better used to help increase your DPS? If a mechanic that requires you to dodge a bunch is happening, can you use a major personal there and get away with just eating the mechanic? Is there a better place you could stand to avoid the whole mechanic?
+>
 
 #### Melee DPS optimization
+
+#### Healer optimization
+> In much harder progression than this guide is aimed at, any increase to raw HPS is seen as better. For what we're going for, it's not. The only healing that ever matters in any content at any level is healing that prevents someone from dying. At the level this guide is aimed at, you will likely be capable of dumping out so much raw HPS that much of it is wasted.
+>
+> This is a difference that has very subtle gearing and gameplay implications. Sometimes the BIS trinket isn't actually the best at preventing people from dying, it's just the best at raw HPS. Take two imaginary trinkets. One provides a 6% intellect increase, which is basically the same as a 6% raw HPS increase, and one other trinket that has a direct heal proc and overall provides a 3% HPS increase but only ever heals people when they are below 30% health. I hope it's clear which trinket is more important where we're going.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
