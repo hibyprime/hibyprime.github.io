@@ -89,17 +89,25 @@ One thing you won't see here that you might expect is positioning in the boss ar
 >
 > Think about your personals. Could they be better used to help increase your DPS? If a mechanic that requires you to dodge a bunch is happening, can you use a major personal there and get away with just eating the mechanic? Is there a better place you could stand to avoid the whole mechanic?
 >
+> When a new section of the fight is reached, feel free to put practically zero effort into maximizing your DPS. Go back to an early progression mindset.
 
 #### Melee DPS optimization
+> Strategy changes can often happen late into progression, when they do, you should think about how that affects what you've been doing. If lust got moved, does that change how you want to use your CDs? If you've been consistently making a damage check, should you consider moving your CDs around?
+>
+> If you're having to use a lot of brain power dodging mechanics or running around, is there a better place the boss could be placed to make it easier? If you're a paladin or similar, could you just use bubble and ignore it?
+>
+> When a new section of the fight is reached, feel free to put practically zero effort into maximizing your DPS. Go back to an early progression mindset.
 
 #### Healer optimization
 > In much harder progression than this guide is aimed at, any increase to raw HPS is good. For what we're going for, it's not. The only healing that ever matters, in any content, at any level, is healing that prevents someone from dying. At the level this guide is aimed at, you will likely be capable of dumping out so much raw HPS that much of it is wasted.
 >
-> This is a difference that has very subtle gearing. Sometimes the BIS trinket isn't actually the best at preventing people from dying, it's just the best at raw HPS. Take two imaginary trinkets. One provides a 6% intellect increase, which is basically the same as a 6% raw HPS increase, and one other trinket that has a direct heal proc and overall provides a 3% HPS increase but only ever heals people when they are below 30% health. I hope it's clear which trinket is more important where we're going.
+> This is a difference that has very subtle gearing implications. Sometimes the BIS trinket isn't actually the best at preventing people from dying, it's just the best at raw HPS. Take two imaginary trinkets. One provides a 6% intellect increase, which is basically the same as a 6% raw HPS increase, and another trinket that has a direct heal proc and overall provides a 3% HPS increase but only ever heals people when they are below 30% health. I hope it's clear which trinket is more important where we're going.
 >
 > There are also subtle gameplay implications. When the entire raid is taking heavy damage, yes you should continue to dump out as much raw HPS as you can. But when it's just a few people with a debuff? You should use your most GCD efficient heal that will keep them alive. For example, just drop a single hot on them and let the smart heals take care of the rest. Healer DPS sucks, and has for a long time now. However as much as it sucks, it's still worth doing. The goal should be to do as much damage as you can without letting anyone die. Sometimes as a druid it's better to just sit in cat form and hit the boss while the other healers take care of the healing, only popping out when you need to ramp for a damage event. When looking at logs, your healing parse is irrelevant. The two stats you want to look at are people dying and your DPS parse, optimize for those.
 >
-> Now that you're comfortable with the fight, conserving mana starts the instant the boss is pulled. If the boss fight is over about 6 minutes long, rip your first mana pot early (or consider using a DPS pot), you'll get another one near the end. The old advice of match your mana bar to the bosses health is a good starting point, but isn't good advice once you're deep into progression. You should have some idea of how much you need to conserve mana by this point. Continuing with the idea in the last paragraph, it's possible that you might end the boss fight with well over half mana because you were able to spend so much of it DPSing.
+> Now that you're comfortable with the fight, conserving mana starts the instant the boss is pulled. If the boss fight is over about 6 minutes long, rip your first mana pot early (or consider using a DPS pot), you'll get another one near the end. The old advice of match your mana bar to the bosses health is a good starting point, but isn't good advice once you're deep into progression. You should have some idea of how much you need to conserve mana by this point. Continuing with the idea in the last paragraph, it's possible that you might end the boss fight with well over half mana because you were able to spend so time DPSing.
+>
+> Once you reach a new portion of the fight that you're less comfortable with, you immediately stop doing any damage or mana conservation and go back to an early progression mind set.
 
 
 
