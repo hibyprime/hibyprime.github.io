@@ -13,6 +13,7 @@ These are the order in which you should prioritize your progression.
     > Only after #1 and #2 are done, you should start thinking about what you can do to help out the other tank.
 4. Do damage
     > An extremely distant fourth. Only after you are comfortable with the rest of the fight do you start worrying about optimizing your damage
+
 #### Healers
 1. Use your cooldowns at the same timing in every pull
     > It's important that other healers are able to learn when they need to spam and when they can focus on other things. If you are moving your cooldowns around it makes it much harder for them to learn this. That's not to say you can't change where to use cooldowns, but it should be a conversation with the other healers/raid lead. 
