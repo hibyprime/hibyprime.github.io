@@ -54,7 +54,7 @@ One thing you won't see here that you might expect is positioning in the boss ar
 
 
 ### Talents
-> Generally speaking, most specs have talents that don't function on some boss fights. Knockbacks, dispells, roots, stuns, etc. As an example, the #1 marksman log on mythic Gallywix could have given up two talents that they never used to take https://www.wowhead.com/spell=459466/ghillie-suit It didn't matter (they still killed the boss), but blizzard gave us the ability to change talents whenever you want, so you should.
+> Generally speaking, most specs have talents that don't function on some boss fights. Knockbacks, dispells, roots, stuns, etc. As an example, the #1 marksman log on mythic Gallywix could have given up two talents that they never used to take [Ghille Suit.](https://www.wowhead.com/spell=459466/ghillie-suit) It didn't matter (they still killed the boss), but blizzard gave us the ability to change talents whenever you want, so you should.
 
 ### Positioning
 > Before the boss is even pulled, find a spot on the floor and go there every single pull. Don't change it without a good reason. Continue to do the same thing once the boss is pulled, find a spot, go there and don't change it without a good reason.
@@ -109,3 +109,42 @@ One thing you won't see here that you might expect is positioning in the boss ar
 > Now that you're comfortable with the fight, conserving mana starts the instant the boss is pulled. If the boss fight is over about 6 minutes long, rip your first mana pot early (or consider using a DPS pot), you'll get another one near the end. The old advice of matching your mana bar to the boss's health is a good starting point, but isn't good advice once you're deep into progression. You should have some idea of how much you need to conserve mana by this point. Continuing with the idea in the last paragraph, it's possible that you might end the boss fight with well over half mana because you were able to spend so much time DPSing.
 >
 > Once you reach a new portion of the fight that you're less comfortable with, you immediately stop doing any damage or mana conservation and go back to an early progression mind set.
+
+### Outside the raid
+> When first learning a spec, it's a good idea to just use a wowhead or icyveins guide to learn the basics. Once you're much more comfortable with the rotation, improving farther is much harder. In general, you want to find logs or vods of people who are better than you and either copy what they're doing, or try to understand the reasons why they're doing what they're doing. [This youtube video](https://www.youtube.com/watch?v=9CPyQideO2Q) is a pretty good explanation of how to use warcraft logs to both find logs and vods of people who are parsing better. In general, it's better to use vods and logs of progression kills, rather than farm kills, but you take what you can find.
+>
+> Your raid leader will generally tell you what addons or weakauras are required for a given boss fight, as well as giving an overview of the strat. Outside of that, watching a full vod kill of someone playing your spec on whatever fight is upcoming is a good idea. It will give you a decent idea of what kind of cooldown timings and positioning you can start with.
+>
+> Deep into progression on a given boss, looking up what other guilds are doing can be helpful for suggesting changes to the overall 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
