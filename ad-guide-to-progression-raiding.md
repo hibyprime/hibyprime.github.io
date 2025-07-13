@@ -115,7 +115,13 @@ One thing you won't see here that you might expect is positioning in the boss ar
 >
 > Your raid leader will generally tell you what addons or weakauras are required for a given boss fight, as well as giving an overview of the strat. Outside of that, watching a full vod kill of someone playing your spec on whatever fight is upcoming is a good idea. It will give you a decent idea of what kind of cooldown timings and positioning you can start with.
 >
-> Deep into progression on a given boss, looking up what other guilds are doing can be helpful for suggesting changes to the overall 
+> Deep into progression on a given boss, looking up what other guilds are doing can be helpful for suggesting changes to the overall strategy. You could also think through the pull in your head and work out what you could be doing better.
+>
+> There are also the basic things like filling your vault, running dungeons, simming your character for upgrades, figuring out which consumables/enchants/gems you need. I suspect most people reading this already know how to do all that. You should spend some time setting up your UI to avoid useless information being displayed to you, and making sure the information you do need is easily accessible.
+>
+> [Big Wigs Voice](https://www.curseforge.com/wow/addons/bigwigs_voice) is an addon that I recommend all raiders use.
+>
+> If you're a DPS, prior to entering the raid you should do a droptimizer sim for the bosses you expect to kill, so you can have some idea ahead of time what you're going to roll on when it drops. Healers (QE Live) and Tanks (Raidbots DPS) can sim too, but it's less useful.
 
 
 
