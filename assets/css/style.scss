@@ -2,3 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
+
+div > h1:first-child {
+  display: none;
+}
