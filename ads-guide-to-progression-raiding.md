@@ -4,7 +4,7 @@ This guide is intended for mid-to-late CE progression raiding. Early CE/HoF and 
 ## Main goals
 
 These are the order in which you should prioritize your progression.
-#### Tanks
+### Tanks
 1. Do not die
     > Early in progression, overusing your defensives is encouraged. Ask for externals before you're even certain you need it. More important than any other goal, you must not die until the raid is wiping. Once you're comfortable with a phase, start thinking about optimizing your CDs and externals.
 2. Make sure the boss/adds are where they need to be
