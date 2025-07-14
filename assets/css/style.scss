@@ -11,6 +11,11 @@ header {
   margin-top: 20px;
 }
 
+#main_content h2 {
+  border-top: 1px solid #b5e853;
+  padding-top: 15px;
+}
+
 @media (max-width: 650px) {
   blockquote {
     margin: 0;
