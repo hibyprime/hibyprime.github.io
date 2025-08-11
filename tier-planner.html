@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tier Token Planner</title>
+  <style>
+    :root{
+      --bg:#0b0f14;--card:#111723;--muted:#94a3b8;--text:#e5e7eb;--accent:#7dd3fc;--accent-2:#38bdf8;--ok:#34d399;--warn:#fbbf24;--danger:#f87171;--ring:#1f2937;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b0f14,#0a1018);color:var(--text);font:14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji}
+    header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.6);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #0f172a;padding:.8rem 1rem}
+    header .title{font-weight:700;letter-spacing:.2px}
+    main{padding:16px;display:grid;gap:16px;grid-template-columns: 1.1fr 2fr 1.45fr}
+    @media (max-width:1100px){main{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,#111723,#0e1520);border:1px solid #0d1420;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:14px}
+    h2,h3{margin:.2rem 0 .7rem 0}
+    h2{font-size:1.05rem}
+    h3{font-size:.95rem;color:var(--muted)}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    label{font-size:.85rem;color:var(--muted)}
+    input, select, button, textarea{font:inherit;color:inherit}
+    input[type="text"], input[type="number"], select, textarea{background:#0b1220;border:1px solid #1f2a44;border-radius:10px;padding:.5rem .6rem;outline:none;width:100%}
+    input[type="number"]{width:90px}
+    #raiderTbody input[type="checkbox"]{width:100%;height:50px;}
+    input:focus, select:focus, textarea:focus{border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+    button{border:1px solid #1f2a44;background:linear-gradient(180deg,#0f172a,#0b1220);border-radius:12px;padding:.55rem .75rem;cursor:pointer}
+    button.primary{background:linear-gradient(180deg,#0ea5e9,#0284c7);border-color:#0284c7;color:#06121e;font-weight:700}
+    button.ghost{background:transparent}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .tokens{display:grid;gap:10px}
+    .token-row{display:grid;grid-template-columns:1fr 120px 40px;gap:8px}
+    .token-row .remove{justify-self:end}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    thead th{color:var(--muted);font-weight:600;text-align:left;padding:0 8px}
+    tbody td{background:linear-gradient(180deg,#0d1420,#0a111c);border:1px solid #132136;border-left:none;border-right:none;padding:.55rem .6rem}
+    tbody td:first-child{border-left:1px solid #132136;border-top-left-radius:10px;border-bottom-left-radius:10px}
+    tbody td:last-child{border-right:1px solid #132136;border-top-right-radius:10px;border-bottom-right-radius:10px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:.2rem .5rem;border-radius:999px;border:1px solid #1f2a44;background:#0b1220;color:#cbd5e1;font-size:.78rem}
+    .pill.ok{border-color:#1b4332;background:rgba(16,185,129,.12);color:#a7f3d0}
+    .pill.warn{border-color:#92400e;background:rgba(251,191,36,.12);color:#fde68a}
+    .pill.danger{border-color:#7f1d1d;background:rgba(248,113,113,.12);color:#fecaca}
+    .muted{color:var(--muted)}
+    .small{font-size:.8rem}
+    .stack{display:flex;flex-direction:column;gap:8px}
+    .spacer{height:10px}
+    .results{display:grid;gap:10px}
+    .assign{display:flex;align-items:center;justify-content:space-between;padding:.6rem .7rem;border:1px dashed #1f2a44;border-radius:12px;background:radial-gradient(1200px 1200px at 0 0, rgba(56,189,248,.07), transparent)}
+    .assign .gain{font-weight:800}
+    .total{border:1px solid #1f2a44;background:linear-gradient(180deg,#091221,#0b1320);padding:.7rem;border-radius:12px;font-weight:700}
+    .kicker{font-size:.78rem;color:var(--muted)}
+    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:.5rem}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .flex{display:flex;gap:8px;align-items:center}
+    .grow{flex:1}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="row">
+      <div class="title">💠 Tier Token Planner — Loot Council Helper</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left column: Tokens to assign -->
+    <section class="card" aria-labelledby="tokens-h">
+      <h2 id="tokens-h">1) Tokens to assign</h2>
+      <div class="spacer"></div>
+      <div class="tokens" id="tokens"></div>
+      <div class="toolbar" style="display: none;">
+        <button id="addTokenBtn">+ Add token</button>
+        <div class="small muted">Eligible classes per token are shown when you select one.</div>
+      </div>
+    </section>
+
+    <!-- Middle column: Raiders -->
+    <section class="card" aria-labelledby="raiders-h">
+      <h2 id="raiders-h">2) Raiders & requests</h2>
+      <div class="row">
+        <label class="flex grow">Search&nbsp;<input id="search" type="text" placeholder="name / class / spec / hero" /></label>
+        <label class="flex">Show only requested&nbsp;<input id="onlyRequested" type="checkbox" /></label>
+      </div>
+      <div class="spacer"></div>
+      <div class="stack">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Class / Spec</th>
+              <th>Hero Talent</th>
+              <th>Pieces</th>
+              <th>Requested?</th>
+              <th>Eligible tokens</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="raiderTbody"></tbody>
+        </table>
+      </div>
+      <div class="kicker small">Edit names/specs/heroes in <strong>RAIDERS</strong>. Update piece counts and "Requested" here as needed.</div>
+    </section>
+
+    <!-- Right column: Solver & results -->
+    <section class="card" aria-labelledby="solve-h">
+      <h2 id="solve-h">3) Solve — maximize immediate raid DPS</h2>
+      <div class="row" style="gap:14px;align-items:center">
+        <label class="flex">Allow zero-gain picks
+          <input id="allowZero" type="checkbox" checked />
+        </label>
+        <label class="flex">Allow multiple tokens to a player
+          <input id="allowMulti" type="checkbox" checked />
+        </label>
+      </div>
+      <div class="spacer"></div>
+      <button class="primary" id="solveBtn">Compute best assignments</button>
+      <div class="spacer"></div>
+      <div id="results" class="results" aria-live="polite"></div>
+      <div id="explain"></div>
+    </section>
+  </main>
+
+  <script>
+  /**********************************************************************
+   *  📦 PLUG YOUR DATA BELOW
+   *  (From here on out, these blocks are yours. I will not edit their values.)
+   **********************************************************************/
+
+  const SPEC_DPS_GAINS = {
+    "Warlock:Destruction:Diabolist": { twoPiece: 781565 },
+    "Rogue:Outlaw:Fatebound": { twoPiece: 524687 },
+    "Druid:Feral:Claw": { twoPiece: 506922 },
+    "Rogue:Assassination:Fatebound": { twoPiece: 489362 },
+    "Warrior:Fury:Slayer": { twoPiece: 488284 },
+    "Hunter:Marksmanship:Dark Ranger": { twoPiece: 476421 },
+    "Shaman:Enhancement:Stormbringer": { twoPiece: 440722 },
+    "Warlock:Demonology:Diabolist": { twoPiece: 424415 },
+    "Warrior:Arms:Slayer": { twoPiece: 420671 },
+    "Priest:Shadow:Voidweaver": { twoPiece: 409590 },
+    "Druid:Feral:Wildstalker": { twoPiece: 407789 },
+    "Hunter:Beast Mastery:Pack Leader": { twoPiece: 404471 },
+    "Death Knight:Unholy:Sanlayn": { twoPiece: 400957 },
+    "Shaman:Elemental:Farseer": { twoPiece: 399438 },
+    "Evoker:Devastation:Flameshaper": { twoPiece: 397855 },
+    "Priest:Shadow:Archon": { twoPiece: 350927 },
+    "Death Knight:Unholy:Rider": { twoPiece: 315584 },
+    "Mage:Arcane:Sunfury": { twoPiece: 274386 },
+    "Death Knight:Blood:Sanlayn": { twoPiece: 250401 },
+    "Mage:Frost:Frostfire": { twoPiece: 243398 },
+    "Warlock:Demonology:Soul Harvester": { twoPiece: 242624 },
+    "Hunter:Marksmanship:Sentinel": { twoPiece: 242561 },
+    "Demon Hunter:Havoc:Aldrachi Reaver": { twoPiece: 233761 },
+    "Demon Hunter:Vengeance:Aldrachi Reaver": { twoPiece: 223538 },
+    "Mage:Fire:Sunfury": { twoPiece: 218603 },
+    "Warrior:Protection:Thane": { twoPiece: 201491 },
+    "Rogue:Assassination:Deathstalker": { twoPiece: 190010 },
+    "Death Knight:Frost:Deathbringer": { twoPiece: 169313 },
+    "Rogue:Subtlety:Trickster": { twoPiece: 167721 },
+    "Druid:Guardian:Claw": { twoPiece: 165459 },
+    "Druid:Balance:Elune": { twoPiece: 161715 },
+    "Warlock:Destruction:Hellcaller": { twoPiece: 156389 },
+    "Death Knight:Frost:Rider": { twoPiece: 151424 },
+    "Warlock:Affliction:Hellcaller": { twoPiece: 149702 },
+    "Monk:Windwalker:Conduit": { twoPiece: 144636 },
+    "Druid:Balance:Keeper": { twoPiece: 141969 },
+    "Monk:Windwalker:Shado-Pan": { twoPiece: 134108 },
+    "Demon Hunter:Vengeance:Fel Scarred": { twoPiece: 129063 },
+    "Hunter:Survival:Pack Leader": { twoPiece: 108508 },
+    "Evoker:Devastation:SC": { twoPiece: 104085 },
+    "Mage:Fire:Frostfire": { twoPiece: 102686 },
+    "Shaman:Enhancement:Totemic": { twoPiece: 100130 },
+    "Paladin:Retribution:Herald": { twoPiece: 96234 },
+    "Mage:Arcane:Spellslinger": { twoPiece: 83761 },
+    "Mage:Frost:Spellslinger": { twoPiece: 83208 },
+    "Warlock:Affliction:Soul Harvester": { twoPiece: 72831 },
+    "Warrior:Protection:Colossus": { twoPiece: 46892 },
+    "Rogue:Subtlety:Deathstalker": { twoPiece: -14019 },
+    "Paladin:Protection:Templar": { twoPiece: -19564 },
+    "Paladin:Retribution:Templar": { twoPiece: -56411 },
+    "Demon Hunter:Havoc:Fel Scarred": { twoPiece: -61873 },
+    "Death Knight:Blood:Deathbringer": { twoPiece: -94932 },
+    "Warrior:Arms:Colossus": { twoPiece: -105428 },
+    "Paladin:Protection:Lightsmith": { twoPiece: -136118 },
+    "Druid:Guardian:Elune": { twoPiece: -252974 },
+    "Rogue:Outlaw:Trickster": { twoPiece: -263347 },
+    "Warrior:Fury:Thane": { twoPiece: -263659 },
+    "Hunter:Survival:Sentinel": { twoPiece: -297996 },
+    "Shaman:Elemental:Stormbringer": { twoPiece: -473034 },
+    "Hunter:Beast Mastery:Dark Ranger": { twoPiece: -673849 },
+    "Monk:Brewmaster:Harmony": { twoPiece: -4950055 },
+    "Monk:Brewmaster:Shado-Pan": { twoPiece: -5544056 },
+  };
+
+    SPEC_DPS_GAINS["Warlock:Destruction:Diabolist"].fourPiece = 1017801;
+    SPEC_DPS_GAINS["Warrior:Protection:Thane"].fourPiece = 879172;
+    SPEC_DPS_GAINS["Monk:Windwalker:Conduit"].fourPiece = 876484;
+    SPEC_DPS_GAINS["Druid:Feral:Claw"].fourPiece = 807261;
+    SPEC_DPS_GAINS["Warrior:Fury:Slayer"].fourPiece = 791408;
+    SPEC_DPS_GAINS["Hunter:Marksmanship:Dark Ranger"].fourPiece = 790160;
+    SPEC_DPS_GAINS["Death Knight:Unholy:Rider"].fourPiece = 772702;
+    SPEC_DPS_GAINS["Priest:Shadow:Archon"].fourPiece = 768032;
+    SPEC_DPS_GAINS["Mage:Fire:Sunfury"].fourPiece = 766548;
+    SPEC_DPS_GAINS["Priest:Shadow:Voidweaver"].fourPiece = 764043;
+    SPEC_DPS_GAINS["Death Knight:Frost:Rider"].fourPiece = 753374;
+    SPEC_DPS_GAINS["Rogue:Outlaw:Fatebound"].fourPiece = 688788;
+    SPEC_DPS_GAINS["Rogue:Assassination:Fatebound"].fourPiece = 675942;
+    SPEC_DPS_GAINS["Druid:Feral:Wildstalker"].fourPiece = 674820;
+    SPEC_DPS_GAINS["Death Knight:Unholy:Sanlayn"].fourPiece = 661072;
+    SPEC_DPS_GAINS["Mage:Frost:Frostfire"].fourPiece = 623813;
+    SPEC_DPS_GAINS["Evoker:Devastation:Flameshaper"].fourPiece = 602472;
+    SPEC_DPS_GAINS["Rogue:Subtlety:Trickster"].fourPiece = 601433;
+    SPEC_DPS_GAINS["Warlock:Demonology:Diabolist"].fourPiece = 595963;
+    SPEC_DPS_GAINS["Hunter:Survival:Pack Leader"].fourPiece = 590482;
+    SPEC_DPS_GAINS["Hunter:Marksmanship:Sentinel"].fourPiece = 586045;
+    SPEC_DPS_GAINS["Warrior:Arms:Slayer"].fourPiece = 572008;
+    SPEC_DPS_GAINS["Shaman:Enhancement:Stormbringer"].fourPiece = 551952;
+    SPEC_DPS_GAINS["Warlock:Destruction:Hellcaller"].fourPiece = 549215;
+    SPEC_DPS_GAINS["Mage:Arcane:Sunfury"].fourPiece = 541206;
+    SPEC_DPS_GAINS["Death Knight:Frost:Deathbringer"].fourPiece = 537078;
+    SPEC_DPS_GAINS["Shaman:Elemental:Farseer"].fourPiece = 508155;
+    SPEC_DPS_GAINS["Monk:Windwalker:Shado-Pan"].fourPiece = 482469;
+    SPEC_DPS_GAINS["Death Knight:Blood:Sanlayn"].fourPiece = 482366;
+    SPEC_DPS_GAINS["Demon Hunter:Vengeance:Fel Scarred"].fourPiece = 469969;
+    SPEC_DPS_GAINS["Demon Hunter:Havoc:Fel Scarred"].fourPiece = 452706;
+    SPEC_DPS_GAINS["Demon Hunter:Havoc:Aldrachi Reaver"].fourPiece = 452446;
+    SPEC_DPS_GAINS["Mage:Fire:Frostfire"].fourPiece = 448704;
+    SPEC_DPS_GAINS["Paladin:Retribution:Templar"].fourPiece = 434512;
+    SPEC_DPS_GAINS["Hunter:Beast Mastery:Pack Leader"].fourPiece = 423419;
+    SPEC_DPS_GAINS["Warlock:Demonology:Soul Harvester"].fourPiece = 416655;
+    SPEC_DPS_GAINS["Mage:Frost:Spellslinger"].fourPiece = 416105;
+    SPEC_DPS_GAINS["Warlock:Affliction:Hellcaller"].fourPiece = 388781;
+    SPEC_DPS_GAINS["Mage:Arcane:Spellslinger"].fourPiece = 379952;
+    SPEC_DPS_GAINS["Demon Hunter:Vengeance:Aldrachi Reaver"].fourPiece = 367741;
+    SPEC_DPS_GAINS["Druid:Guardian:Claw"].fourPiece = 352000;
+    SPEC_DPS_GAINS["Rogue:Assassination:Deathstalker"].fourPiece = 327620;
+    SPEC_DPS_GAINS["Rogue:Outlaw:Trickster"].fourPiece = 325419;
+    SPEC_DPS_GAINS["Paladin:Protection:Lightsmith"].fourPiece = 313286;
+    SPEC_DPS_GAINS["Shaman:Enhancement:Totemic"].fourPiece = 302008;
+    SPEC_DPS_GAINS["Druid:Balance:Elune"].fourPiece = 283913;
+    SPEC_DPS_GAINS["Paladin:Protection:Templar"].fourPiece = 270953;
+    SPEC_DPS_GAINS["Warrior:Fury:Thane"].fourPiece = 255570;
+    SPEC_DPS_GAINS["Evoker:Devastation:SC"].fourPiece = 245393;
+    SPEC_DPS_GAINS["Warrior:Arms:Colossus"].fourPiece = 242711;
+    SPEC_DPS_GAINS["Druid:Balance:Keeper"].fourPiece = 237037;
+    SPEC_DPS_GAINS["Warlock:Affliction:Soul Harvester"].fourPiece = 218139;
+    SPEC_DPS_GAINS["Warrior:Protection:Colossus"].fourPiece = 207434;
+    SPEC_DPS_GAINS["Paladin:Retribution:Herald"].fourPiece = 193093;
+    SPEC_DPS_GAINS["Hunter:Beast Mastery:Dark Ranger"].fourPiece = 157766;
+    SPEC_DPS_GAINS["Rogue:Subtlety:Deathstalker"].fourPiece = 144217;
+    SPEC_DPS_GAINS["Hunter:Survival:Sentinel"].fourPiece = 81630;
+    SPEC_DPS_GAINS["Death Knight:Blood:Deathbringer"].fourPiece = 15292;
+    SPEC_DPS_GAINS["Druid:Guardian:Elune"].fourPiece = -156113;
+    SPEC_DPS_GAINS["Shaman:Elemental:Stormbringer"].fourPiece = -359605;
+    SPEC_DPS_GAINS["Monk:Brewmaster:Harmony"].fourPiece = -5445055;
+    SPEC_DPS_GAINS["Monk:Brewmaster:Shado-Pan"].fourPiece = -5594456;
+
+  let RAIDERS = [
+    { name: "Adbuns",  class: "Mage",  spec: "Arcane",  hero: "Sunfury",  piecesOwned: 0,  requested: false },
+    { name: "Apris",  class: "Mage",  spec: "Arcane",  hero: "Sunfury",  piecesOwned: 0,  requested: false },
+    { name: "Arcaytia",  class: "Shaman",  spec: "Elemental",  hero: "Farseer",  piecesOwned: 0,  requested: false },
+    { name: "Bizoy",  class: "Rogue",  spec: "Assassination",  hero: "Fatebound",  piecesOwned: 0,  requested: false },
+    { name: "Bizoysk",  class: "Demon Hunter",  spec: "Havoc",  hero: "Aldrachi Reaver",  piecesOwned: 0,  requested: false },
+    { name: "Cara",  class: "Hunter",  spec: "Marksmanship",  hero: "Dark Ranger",  piecesOwned: 0,  requested: false },
+    { name: "Coretexx",  class: "Hunter",  spec: "Beast Mastery",  hero: "Pack Leader",  piecesOwned: 0,  requested: false },
+    { name: "Gnomemash",  class: "Death Knight",  spec: "Frost",  hero: "Rider",  piecesOwned: 0,  requested: false },
+    { name: "Guacamolé",  class: "Priest",  spec: "Shadow",  hero: "Archon",  piecesOwned: 0,  requested: false },
+    { name: "Hianà",  class: "Warrior",  spec: "Arms",  hero: "Slayer",  piecesOwned: 0,  requested: false },
+    { name: "Jinnk",  class: "Hunter",  spec: "Beast Mastery",  hero: "Pack Leader",  piecesOwned: 0,  requested: false },
+    { name: "Mccrashin",  class: "Paladin",  spec: "Retribution",  hero: "Templar",  piecesOwned: 0,  requested: false },
+    { name: "Mthfkr",  class: "Druid",  spec: "Balance",  hero: "Keeper",  piecesOwned: 0,  requested: false },
+    { name: "Multism",  class: "Death Knight",  spec: "Frost",  hero: "Rider",  piecesOwned: 0,  requested: false },
+    { name: "Neckrot",  class: "Warlock",  spec: "Destruction",  hero: "Diabolist",  piecesOwned: 0,  requested: false },
+    { name: "Ochotacos",  class: "Death Knight",  spec: "Frost",  hero: "Rider",  piecesOwned: 0,  requested: false },
+    { name: "Olahndin",  class: "Rogue",  spec: "Assassination",  hero: "Fatebound",  piecesOwned: 0,  requested: false },
+    { name: "Rhodry",  class: "Shaman",  spec: "Elemental",  hero: "Farseer",  piecesOwned: 0,  requested: false },
+    { name: "Sinfulghost",  class: "Warrior",  spec: "Arms",  hero: "Slayer",  piecesOwned: 0,  requested: false },
+    { name: "Thiccshot",  class: "Hunter",  spec: "Beast Mastery",  hero: "Pack Leader",  piecesOwned: 0,  requested: false },
+    { name: "Thorinfel",  class: "Demon Hunter",  spec: "Havoc",  hero: "Aldrachi Reaver",  piecesOwned: 0,  requested: false },
+    { name: "Trueloki",  class: "Warlock",  spec: "Destruction",  hero: "Diabolist",  piecesOwned: 0,  requested: false },
+    { name: "Turtleñugget",  class: "Priest",  spec: "Shadow",  hero: "Archon",  piecesOwned: 0,  requested: false },
+    { name: "Twin",  class: "Demon Hunter",  spec: "Havoc",  hero: "Aldrachi Reaver",  piecesOwned: 0,  requested: false },
+    { name: "Vosem",  class: "Druid",  spec: "Balance",  hero: "Keeper",  piecesOwned: 0,  requested: false },
+  ];
+
+  const TOKEN_ELIGIBILITY = {
+    "Mystic":    ["Druid","Hunter","Mage"],
+    "Venerated": ["Paladin","Priest","Shaman"],
+    "Zenith":    ["Monk","Rogue","Warrior","Evoker"],
+    "Dreadful":  ["Death Knight","Warlock","Demon Hunter"],
+    "Curio":     ["*"] // wildcard — any class
+  };
+
+  /**********************************************************************
+   *  🔢 NUMBER FORMATTING (k/M/B, always 2 decimals)
+   **********************************************************************/
+  function formatAbbrev(n){
+    const sign = n < 0 ? '-' : '';
+    const v = Math.abs(n||0);
+    if(v >= 1e9) return sign + (v/1e9).toFixed(2) + 'B';
+    if(v >= 1e6) return sign + (v/1e6).toFixed(2) + 'M';
+    if(v >= 1e3) return sign + (v/1e3).toFixed(2) + 'k';
+    return sign + v.toFixed(2);
+  }
+
+  /**********************************************************************
+   *  🧠 SOLVER LOGIC (hero-aware, raw DPS, multi-award support)
+   **********************************************************************/
+
+  function getGains(r){
+    const heroKey = `${r.class}:${r.spec}:${(r.hero||'').trim()}`;
+    if((r.hero||'').trim() && SPEC_DPS_GAINS[heroKey]) return SPEC_DPS_GAINS[heroKey];
+    const specOnly = `${r.class}:${r.spec}`;
+    return SPEC_DPS_GAINS[specOnly];
+  }
+
+  function marginalGainFromOnePiece(piecesOwned, gains){
+    if(!gains) return 0;
+    if(piecesOwned === 1){
+      return gains.twoPiece ?? 0;                  // 1→2 grants 2pc bonus (raw DPS)
+    } else if(piecesOwned === 3){
+      const two = gains.twoPiece ?? 0, four = gains.fourPiece ?? 0;
+      return Math.max(0, four - two);             // 3→4 grants delta to 4pc
+    }
+    return 0;                                      // 0→1 or 2→3 are progress-only
+  }
+
+  function completionNote(piecesOwned){
+    if(piecesOwned === 1) return "completes 2pc";
+    if(piecesOwned === 3) return "completes 4pc";
+    if(piecesOwned >= 4) return "already 4pc";
+    return "progress only";
+  }
+
+  const ALL_CLASSES = ()=> [...new Set(RAIDERS.map(r=>r.class))];
+  function eligibleClassesForToken(token){
+    const map = TOKEN_ELIGIBILITY[token] || [];
+    if(map.includes('*') || token.toLowerCase()==='curio') return ALL_CLASSES();
+    return map;
+  }
+
+  function eligibleTokensForClass(cls){
+    return Object.entries(TOKEN_ELIGIBILITY)
+      .filter(([, classes]) => classes.includes('*') || classes.includes(cls))
+      .map(([token]) => token);
+  }
+
+  function heroVariantsFor(cls, spec){
+    const prefix = `${cls}:${spec}:`;
+    return Object.keys(SPEC_DPS_GAINS)
+      .filter(k => k.startsWith(prefix))
+      .map(k => k.slice(prefix.length))
+      .filter(Boolean);
+  }
+
+  function buildTokenSlots(){
+    const rows = [...document.querySelectorAll('.token-row')];
+    const slots = [];
+    for(const row of rows){
+      const sel = row.querySelector('select');
+      const num = parseInt(row.querySelector('input[type=number]').value,10) || 0;
+      for(let i=0;i<num;i++) slots.push({ token: sel.value, id: `${sel.value}#${i+1}` });
+    }
+    return slots;
+  }
+
+  function computeCandidatesByToken(token, onlyRequested, statePieces, disallowIdxSet){
+    const allowed = eligibleClassesForToken(token);
+    return RAIDERS
+      .map((r,idx)=>({ ...r, idx }))
+      .filter(r => allowed.includes(r.class))
+      .filter(r => !onlyRequested || !!r.requested)
+      .map(r=>{
+        const gains = getGains(r);
+        const currentPieces = statePieces[r.idx] ?? r.piecesOwned ?? 0;
+        const mg   = marginalGainFromOnePiece(currentPieces, gains);
+        const note = completionNote(currentPieces);
+        return { token, raiderIdx:r.idx, name:r.name, cls:r.class, spec:r.spec, hero:r.hero||'', pieces:currentPieces, gains, mg, note };
+      })
+      .filter(c => !disallowIdxSet || !disallowIdxSet.has(c.raiderIdx))
+      .sort((a,b)=>{
+        if(b.mg !== a.mg) return b.mg - a.mg;                 // 1) highest DPS gain
+        if(a.note !== b.note){
+          const rank = n=> n.includes('4pc')?2 : n.includes('2pc')?1 : 0;
+          return rank(b.note)-rank(a.note);
+        }
+        if(a.pieces !== b.pieces) return a.pieces - b.pieces; // 3) fewer pieces first
+        return a.name.localeCompare(b.name);
+      });
+  }
+
+  function solve(){
+    const slots = buildTokenSlots();
+    const onlyRequested = true; // always honor requests
+    const allowMulti = document.getElementById('allowMulti').checked;
+    const allowZero  = document.getElementById('allowZero').checked;
+
+    // Build per-slot eligible requester list
+    const eligible = slots.map(s => {
+      const allowed = eligibleClassesForToken(s.token);
+      const ids = [];
+      for (let i=0;i<RAIDERS.length;i++){
+        const r = RAIDERS[i];
+        if(!r.requested) continue;
+        if(allowed.includes(r.class)) ids.push(i);
+      }
+      return ids;
+    });
+
+    // Visit slots with fewest eligible first to reduce branching
+    const order = [...slots.keys()].sort((a,b)=> eligible[a].length - eligible[b].length);
+
+    const gainsCache = RAIDERS.map(r=> getGains(r));
+    const initPieces = RAIDERS.map(r=> Math.min(4, r.piecesOwned|0));
+
+    const results = []; // collect scenarios
+    const seen = new Set(); // de-dup by slot->assignee signature
+    const K = 10; // keep top 10
+
+    function sigFromPicks(picks){
+      const pairs = picks.map(p=> `${p.slotId}->${p.pick.raiderIdx ?? '-'}` ).sort();
+      return pairs.join('|');
+    }
+
+    function pushScenario(total, picks){
+      const sig = sigFromPicks(picks);
+      if(seen.has(sig)) return;
+      seen.add(sig);
+
+      // Fairness metrics: prefer wider spread among requesters on ties
+      const counts = new Map();
+      for(const p of picks){
+        const id = p.pick && typeof p.pick.raiderIdx === 'number' ? p.pick.raiderIdx : null;
+        if(id==null) continue;
+        counts.set(id, (counts.get(id)||0)+1);
+      }
+      const unique = counts.size;               // how many distinct raiders got loot
+      let imbalance = 0;                        // lower = more even spread
+      for(const c of counts.values()) imbalance += c*c; // sum of squares
+
+      results.push({ total, picks: picks.slice(), unique, imbalance });
+      results.sort((a,b)=>{
+        if(b.total !== a.total) return b.total - a.total;       // 1) maximize DPS
+        if(b.unique !== a.unique) return b.unique - a.unique;    // 2) maximize # of unique raiders
+        if(a.imbalance !== b.imbalance) return a.imbalance - b.imbalance; // 3) minimize imbalance
+        // 4) deterministic fallback
+        const sa = a.picks.map(p=>p.pick.name).sort().join(',');
+        const sb = b.picks.map(p=>p.pick.name).sort().join(',');
+        if(sa<sb) return -1; if(sa>sb) return 1; return 0;
+      });
+      if(results.length > K) results.length = K;
+    }
+
+
+    function dfs(i, pieces, used, picks, acc){
+      if(i >= order.length){
+        pushScenario(acc, picks);
+        return;
+      }
+      const sIdx = order[i];
+
+      // Option 1: leave this slot unassigned
+      dfs(i+1, pieces, used, picks, acc);
+
+      // Option 2+: assign to an eligible requester
+      for(const ridx of eligible[sIdx]){
+        if(!allowMulti && used.has(ridx)) continue;
+        const before = pieces[ridx]; if(before>=4) continue;
+        const g = gainsCache[ridx];
+        let mg = marginalGainFromOnePiece(before, g);
+        if(mg == null || Number.isNaN(mg)) mg = 0;
+        if(!allowZero && mg <= 0) continue; // respect zero-gain toggle
+
+        const after = Math.min(4, before+1);
+        const nextPieces = pieces.slice(); nextPieces[ridx] = after;
+        const nextUsed   = allowMulti ? used : new Set(used); if(!allowMulti) nextUsed.add(ridx);
+
+        picks.push({
+          slotId: slots[sIdx].id,
+          token:  slots[sIdx].token,
+          pick: {
+            raiderIdx: ridx,
+            name: RAIDERS[ridx].name,
+            cls:  RAIDERS[ridx].class,
+            spec: RAIDERS[ridx].spec,
+            hero: RAIDERS[ridx].hero || '',
+            note: completionNote(before)
+          },
+          mg, before, after
+        });
+
+        dfs(i+1, nextPieces, nextUsed, picks, acc + mg);
+        picks.pop();
+      }
+    }
+
+    dfs(0, initPieces, new Set(), [], 0);
+
+    // Always return at least one entry (best or empty)
+    const best = results[0] || { total:0, picks:[] };
+
+    return { best, all: results };
+  }
+
+  /**********************************************************************
+   *  🖼️ RENDERING (hero-aware, raw DPS)
+   **********************************************************************/
+
+  function renderTokens(){
+    const wrap = document.getElementById('tokens');
+    wrap.innerHTML = '';
+    addTokenRow();
+  }
+
+  function addTokenRow(defaultToken){
+    const wrap = document.getElementById('tokens');
+    const row = document.createElement('div');
+    row.className = 'token-row';
+
+    const sel = document.createElement('select');
+    for(const token of Object.keys(TOKEN_ELIGIBILITY)){
+      const opt = document.createElement('option');
+      opt.value = token; opt.textContent = token; sel.appendChild(opt);
+    }
+    if(defaultToken) sel.value = defaultToken;
+
+    const num = document.createElement('input');
+    num.type = 'number'; num.min = '0'; num.step = '1'; num.value = '1';
+    num.value = '0';
+
+    const rm = document.createElement('button');
+    rm.className = 'remove ghost'; rm.innerHTML = '✕';
+    rm.addEventListener('click',()=>{ row.remove(); });
+
+    const pill = document.createElement('div');
+    pill.className = 'pill'; pill.style.gridColumn = '1 / -1';
+    sel.addEventListener('change',()=>{
+      const token = sel.value;
+      const classes = eligibleClassesForToken(token) || [];
+      const label = (classes.length>12 || token.toLowerCase()==='curio') ? 'any class' : classes.join(', ');
+      pill.textContent = `${token} → ${label || '—'}`;
+    });
+    setTimeout(()=> sel.dispatchEvent(new Event('change')));
+
+    row.appendChild(sel); row.appendChild(num); row.appendChild(rm); row.appendChild(pill);
+    wrap.appendChild(row);
+  }
+
+  function renderRaiders(){
+    const tbody = document.getElementById('raiderTbody');
+    const q = (document.getElementById('search').value || '').trim().toLowerCase();
+    const onlyReq = document.getElementById('onlyRequested').checked;
+
+    tbody.innerHTML = '';
+    const rows = RAIDERS
+      .map((r,idx)=>({ ...r, idx }))
+      .filter(r => !q || `${r.name} ${r.class} ${r.spec} ${r.hero||''}`.toLowerCase().includes(q))
+      .filter(r => !onlyReq || !!r.requested);
+
+    if(!rows.length){
+      const tr = document.createElement('tr');
+      const td = document.createElement('td'); td.colSpan = 7; td.className='muted'; td.textContent = 'No raiders match the current filters.';
+      tr.appendChild(td); tbody.appendChild(tr); return;
+    }
+
+    for(const r of rows){
+      const tr = document.createElement('tr');
+      const gains = getGains(r);
+      const tokens = eligibleTokensForClass(r.class).join(', ');
+
+      // name
+      let td = document.createElement('td'); td.textContent = r.name; tr.appendChild(td);
+      // class/spec
+      td = document.createElement('td'); td.textContent = `${r.class} / ${r.spec}`; tr.appendChild(td);
+      // hero select
+      td = document.createElement('td');
+      const heroSel = document.createElement('select');
+      const variants = heroVariantsFor(r.class, r.spec);
+      if(!r.hero && variants.length){ r.hero = variants[0]; RAIDERS[r.idx].hero = r.hero; }
+      if(variants.length){
+        for(const v of variants){
+          const opt = document.createElement('option'); opt.value = v; opt.textContent = v; heroSel.appendChild(opt);
+        }
+        heroSel.value = r.hero || variants[0];
+        heroSel.addEventListener('change', ()=>{ r.hero = heroSel.value; RAIDERS[r.idx].hero = r.hero; renderRaiders(); });
+      } else {
+        heroSel.disabled = true; const opt = document.createElement('option'); opt.textContent = '—'; heroSel.appendChild(opt);
+      }
+      td.appendChild(heroSel); tr.appendChild(td);
+      // pieces (editable number)
+      td = document.createElement('td');
+      const n = document.createElement('input'); n.type = 'number'; n.min='0'; n.max='4'; n.step='1'; n.value = r.piecesOwned;
+      n.addEventListener('input',()=>{ r.piecesOwned = Math.max(0, Math.min(4, parseInt(n.value||'0',10))); RAIDERS[r.idx].piecesOwned = r.piecesOwned; });
+      td.appendChild(n); tr.appendChild(td);
+      // requested
+      td = document.createElement('td');
+      const c = document.createElement('input'); c.type = 'checkbox'; c.checked = !!r.requested;
+      c.addEventListener('change',()=>{ r.requested = c.checked; RAIDERS[r.idx].requested = r.requested; });
+      td.appendChild(c); tr.appendChild(td);
+      // eligible tokens
+      td = document.createElement('td'); td.textContent = tokens || '—'; tr.appendChild(td);
+      // notes
+      td = document.createElement('td');
+      if(!gains){
+        const p = document.createElement('span'); p.className='pill warn'; p.textContent='⚠ missing DPS data (spec/hero)'; td.appendChild(p);
+      }else{
+        const p = document.createElement('span'); p.className='pill ok';
+        const label = (r.hero?`${r.hero}`:'spec');
+        p.textContent=`${label}: 2pc ${formatAbbrev(gains.twoPiece??0)} • 4pc ${formatAbbrev(gains.fourPiece??0)}`;
+        td.appendChild(p);
+      }
+      tr.appendChild(td);
+
+      tbody.appendChild(tr);
+    }
+  }
+
+  function renderResults(res){
+    const out = document.getElementById('results');
+    out.innerHTML = '';
+
+    // Always show only the single best scenario
+    const best = (res && res.best) ? res.best : (Array.isArray(res) ? { total: res.reduce((s,p)=>s+(p.mg||0),0), picks: res } : { total:0, picks:[] });
+
+    if(!best.picks.length){
+      out.innerHTML = '<div class="muted">No optimal assignments found with the current settings. Try enabling "Allow zero-gain picks" or adjust tokens/requests.</div>';
+      document.getElementById('explain').innerHTML = '';
+      return;
+    }
+
+    const h = document.createElement('div');
+    h.className = 'pill';
+    h.textContent = `Best assignment • Total +${formatAbbrev(best.total)} DPS`;
+    out.appendChild(h);
+
+    let total = 0;
+    for(const a of best.picks){
+      total += a.mg || 0;
+      const div = document.createElement('div');
+      div.className = 'assign';
+      const heroLabel = a.pick.hero ? ` <span class=\"muted\">(${a.pick.hero})</span>` : '';
+      const left = document.createElement('div');
+      left.innerHTML = `<div><strong>${a.token}</strong> → <strong>${a.pick.name}</strong> <span class=\"muted\">(${a.pick.cls} / ${a.pick.spec}</span>${heroLabel}<span class=\"muted\">)</span></div>
+                        <div class=\"small muted\">${a.pick.note}; pieces ${a.before} → ${a.after}</div>`;
+      const right = document.createElement('div'); right.className = 'gain'; right.textContent = `+${formatAbbrev(a.mg||0)}`;
+      div.appendChild(left); div.appendChild(right);
+      out.appendChild(div);
+    }
+
+    const totalDiv = document.createElement('div');
+    totalDiv.className = 'total';
+    totalDiv.textContent = `Estimated total raid DPS increase: +${formatAbbrev(total)} DPS`;
+    out.appendChild(totalDiv);
+
+    // Keep the existing "Why these picks?" preview based on current roster state
+    const ex = document.getElementById('explain');
+    ex.innerHTML = '<div class=\"spacer\"></div><h3>Why these picks?</h3>';
+    for(const [token] of Object.entries(TOKEN_ELIGIBILITY)){
+      const cands = computeCandidatesByToken(token, true, RAIDERS.map(r=>r.piecesOwned), null).slice(0,5);
+      if(!cands.length) continue;
+      const wrapper = document.createElement('div'); wrapper.className='stack';
+      const hh = document.createElement('div'); hh.innerHTML = `<strong>${token}</strong> — top candidates`;
+      wrapper.appendChild(hh);
+      const tbl = document.createElement('table');
+      const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Name</th><th>Class/Spec</th><th>Hero</th><th>Pieces</th><th>Immediate DPS</th><th>Note</th></tr>';
+      tbl.appendChild(thead);
+      const tb = document.createElement('tbody');
+      for(const c of cands){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${c.name}</td><td>${c.cls} / ${c.spec}</td><td>${c.hero||'—'}</td><td>${c.pieces}</td><td>+${formatAbbrev(c.mg||0)}</td><td>${c.note}</td>`;
+        tb.appendChild(tr);
+      }
+      tbl.appendChild(tb); wrapper.appendChild(tbl); ex.appendChild(wrapper);
+    }
+  }
+
+  /**********************************************************************
+   *  🔌 WIRE-UP
+   **********************************************************************/
+
+  function init(){
+    renderTokens();
+    document.getElementById('addTokenBtn').addEventListener('click',()=> addTokenRow());
+
+    renderRaiders();
+    document.getElementById('search').addEventListener('input',renderRaiders);
+    document.getElementById('onlyRequested').addEventListener('change',renderRaiders);
+
+    document.getElementById('solveBtn').addEventListener('click',()=>{
+      const res = solve();
+      renderResults(res);
+    });
+
+    // Starter rows for each token type
+    const keys = Object.keys(TOKEN_ELIGIBILITY);
+    const tokenWrap = document.getElementById('tokens');
+    tokenWrap.innerHTML = '';
+    for(const key of keys){ addTokenRow(key); }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
