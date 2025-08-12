@@ -388,10 +388,11 @@
   }
 
   function solve(){
+    // === Beam Search (bounded, supports 0→4 chains) ===
     const slots = buildTokenSlots();
-    const onlyRequested = true; // always honor requests
     const allowMulti = document.getElementById('allowMulti').checked;
     const allowZero  = document.getElementById('allowZero').checked;
+    const W = 200; // Beam width (tune 100–300)
 
     // Build per-slot eligible requester list
     const eligible = slots.map(s => {
@@ -405,99 +406,164 @@
       return ids;
     });
 
-    // Visit slots with fewest eligible first to reduce branching
-    const order = [...slots.keys()].sort((a,b)=> eligible[a].length - eligible[b].length);
+    // Visit fewest-eligible first; on ties push Curio later (bigger branching last)
+    const order = [...slots.keys()].sort((a,b)=>{
+      const da = eligible[a].length, db = eligible[b].length;
+      if(da !== db) return da - db;
+      const ta = String(slots[a].token||'').toLowerCase();
+      const tb = String(slots[b].token||'').toLowerCase();
+      const sa = (ta === 'curio') ? 1 : 0;
+      const sb = (tb === 'curio') ? 1 : 0;
+      return sa - sb;
+    });
 
     const gainsCache = RAIDERS.map(r=> getGains(r));
-    const initPieces = RAIDERS.map(r=> Math.min(4, r.piecesOwned|0));
+    const initPiecesArr = RAIDERS.map(r=> Math.min(4, r.piecesOwned|0));
 
-    const results = []; // collect scenarios
-    const seen = new Set(); // de-dup by slot->assignee signature
-    const K = 10; // keep top 10
-
-    function sigFromPicks(picks){
-      const pairs = picks.map(p=> `${p.slotId}->${p.pick.raiderIdx ?? '-'}` ).sort();
-      return pairs.join('|');
+    function mgAt(ridx, piecesVal){
+      const g = gainsCache[ridx];
+      let mg = marginalGainFromOnePiece(piecesVal, g);
+      if(mg == null || Number.isNaN(mg)) mg = 0;
+      return mg;
     }
 
-    function pushScenario(total, picks){
-      const sig = sigFromPicks(picks);
-      if(seen.has(sig)) return;
-      seen.add(sig);
+    function upperBound(depth, pieces, used){
+      // optimistic: for each remaining slot, add best immediate mg available (≤0 treated as 0)
+      let sum = 0;
+      for(let k=depth;k<order.length;k++){
+        const sIdx = order[k];
+        let best = 0;
+        for(const ridx of eligible[sIdx]){
+          if(!allowMulti && used.has(ridx)) continue;
+          const before = pieces[ridx]; if(before>=4) continue;
+          const mg = mgAt(ridx, before);
+          if(mg > best) best = mg;
+        }
+        if(best > 0) sum += best;
+      }
+      return sum;
+    }
 
-      // Fairness metrics: prefer wider spread among requesters on ties
+    function sig(pieces, used){
+      const ps = Array.from(pieces).join(',');
+      if(allowMulti) return ps;
+      const us = Array.from(used).sort((a,b)=>a-b).join(',');
+      return ps + '|' + us;
+    }
+
+    function fairness(picks){
       const counts = new Map();
       for(const p of picks){
         const id = p.pick && typeof p.pick.raiderIdx === 'number' ? p.pick.raiderIdx : null;
         if(id==null) continue;
         counts.set(id, (counts.get(id)||0)+1);
       }
-      const unique = counts.size;               // how many distinct raiders got loot
-      let imbalance = 0;                        // lower = more even spread
-      for(const c of counts.values()) imbalance += c*c; // sum of squares
-
-      results.push({ total, picks: picks.slice(), unique, imbalance });
-      results.sort((a,b)=>{
-        if(b.total !== a.total) return b.total - a.total;       // 1) maximize DPS
-        if(b.unique !== a.unique) return b.unique - a.unique;    // 2) maximize # of unique raiders
-        if(a.imbalance !== b.imbalance) return a.imbalance - b.imbalance; // 3) minimize imbalance
-        // 4) deterministic fallback
-        const sa = a.picks.map(p=>p.pick.name).sort().join(',');
-        const sb = b.picks.map(p=>p.pick.name).sort().join(',');
-        if(sa<sb) return -1; if(sa>sb) return 1; return 0;
-      });
-      if(results.length > K) results.length = K;
+      let imbalance = 0; for(const c of counts.values()) imbalance += c*c;
+      return { unique: counts.size, imbalance };
     }
 
+    // Initial beam
+    let beam = [{
+      total: 0,
+      pieces: new Int8Array(initPiecesArr),
+      used: new Set(),
+      picks: [],
+      score: 0 // will be filled
+    }];
+    beam[0].score = upperBound(0, beam[0].pieces, beam[0].used);
 
-    function dfs(i, pieces, used, picks, acc){
-      if(i >= order.length){
-        pushScenario(acc, picks);
-        return;
+    // Expand layer by layer
+    for(let depth=0; depth<order.length; depth++){
+      const nextBySig = new Map();
+      const sIdx = order[depth];
+
+      for(const state of beam){
+        // Branch: skip this slot
+        {
+          const ub = upperBound(depth+1, state.pieces, state.used);
+          const nextState = {
+            total: state.total,
+            pieces: state.pieces, // reuse (no change)
+            used: state.used,     // reuse (no change)
+            picks: state.picks,   // reuse (no change)
+            score: state.total + ub
+          };
+          const key = sig(nextState.pieces, nextState.used);
+          const prev = nextBySig.get(key);
+          if(!prev || nextState.score > prev.score) nextBySig.set(key, nextState);
+        }
+
+        // Branches: assign to an eligible requester
+        for(const ridx of eligible[sIdx]){
+          if(!allowMulti && state.used.has(ridx)) continue;
+          const before = state.pieces[ridx]; if(before>=4) continue;
+          let mg = mgAt(ridx, before);
+          if(!allowZero && mg <= 0) continue; // respect zero-gain toggle
+
+          const after = Math.min(4, before+1);
+          const pieces2 = state.pieces.slice(); pieces2[ridx] = after;
+          const used2   = allowMulti ? state.used : new Set(state.used); if(!allowMulti) used2.add(ridx);
+
+          const picks2 = state.picks.concat([{
+            slotId: slots[sIdx].id,
+            token:  slots[sIdx].token,
+            pick: {
+              raiderIdx: ridx,
+              name: RAIDERS[ridx].name,
+              cls:  RAIDERS[ridx].class,
+              spec: RAIDERS[ridx].spec,
+              hero: RAIDERS[ridx].hero || '',
+              note: completionNote(before)
+            },
+            mg, before, after
+          }]);
+
+          const ub = upperBound(depth+1, pieces2, used2);
+          const nextState = {
+            total: state.total + mg,
+            pieces: pieces2,
+            used: used2,
+            picks: picks2,
+            score: state.total + mg + ub
+          };
+          const key = sig(nextState.pieces, nextState.used);
+          const prev = nextBySig.get(key);
+          if(!prev || nextState.score > prev.score) nextBySig.set(key, nextState);
+        }
       }
-      const sIdx = order[i];
 
-      // Option 1: leave this slot unassigned
-      dfs(i+1, pieces, used, picks, acc);
-
-      // Option 2+: assign to an eligible requester
-      for(const ridx of eligible[sIdx]){
-        if(!allowMulti && used.has(ridx)) continue;
-        const before = pieces[ridx]; if(before>=4) continue;
-        const g = gainsCache[ridx];
-        let mg = marginalGainFromOnePiece(before, g);
-        if(mg == null || Number.isNaN(mg)) mg = 0;
-        if(!allowZero && mg <= 0) continue; // respect zero-gain toggle
-
-        const after = Math.min(4, before+1);
-        const nextPieces = pieces.slice(); nextPieces[ridx] = after;
-        const nextUsed   = allowMulti ? used : new Set(used); if(!allowMulti) nextUsed.add(ridx);
-
-        picks.push({
-          slotId: slots[sIdx].id,
-          token:  slots[sIdx].token,
-          pick: {
-            raiderIdx: ridx,
-            name: RAIDERS[ridx].name,
-            cls:  RAIDERS[ridx].class,
-            spec: RAIDERS[ridx].spec,
-            hero: RAIDERS[ridx].hero || '',
-            note: completionNote(before)
-          },
-          mg, before, after
-        });
-
-        dfs(i+1, nextPieces, nextUsed, picks, acc + mg);
-        picks.pop();
-      }
+      // Select top W by score
+      let next = Array.from(nextBySig.values());
+      next.sort((a,b)=> b.score - a.score);
+      beam = next.slice(0, W);
+      if(beam.length === 0) break; // nothing left to expand
     }
 
-    dfs(0, initPieces, new Set(), [], 0);
+    if(beam.length === 0){
+      return { best: { total:0, picks:[] }, all: [] };
+    }
 
-    // Always return at least one entry (best or empty)
-    const best = results[0] || { total:0, picks:[] };
+    // Choose the best by total DPS, with fairness tie-breakers
+    const bestTotal = Math.max(...beam.map(s=>s.total));
+    const tied = beam.filter(s=> s.total === bestTotal);
+    tied.sort((a,b)=>{
+      // 1) prefer more unique raiders
+      const fa = fairness(a.picks), fb = fairness(b.picks);
+      if(fb.unique !== fa.unique) return fb.unique - fa.unique;
+      // 2) then lower imbalance
+      if(fa.imbalance !== fb.imbalance) return fa.imbalance - fb.imbalance;
+      // 3) deterministic fallback
+      const sa = a.picks.map(p=>p.pick.name).sort().join(',');
+      const sb = b.picks.map(p=>p.pick.name).sort().join(',');
+      if(sa<sb) return -1; if(sa>sb) return 1; return 0;
+    });
 
-    return { best, all: results };
+    // Sort picks by original slot order for nicer display
+    const slotIndex = new Map();
+    slots.forEach((s,i)=> slotIndex.set(s.id, i));
+    const bestPicks = tied[0].picks.slice().sort((a,b)=> slotIndex.get(a.slotId) - slotIndex.get(b.slotId));
+
+    return { best: { total: tied[0].total, picks: bestPicks }, all: [] };
   }
 
   /**********************************************************************
