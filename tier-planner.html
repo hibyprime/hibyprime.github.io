@@ -297,7 +297,7 @@
     const v = Math.abs(n||0);
     if(v >= 1e9) return sign + (v/1e9).toFixed(2) + 'B';
     if(v >= 1e6) return sign + (v/1e6).toFixed(2) + 'M';
-    if(v >= 1e3) return sign + (v/1e3).toFixed(2) + 'k';
+    if(v >= 1e3) return sign + (v/1e3).toFixed(0) + 'k';
     return sign + v.toFixed(2);
   }
 
